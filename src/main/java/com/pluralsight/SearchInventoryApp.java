@@ -4,7 +4,11 @@ import java.util.ArrayList;
 
 public class SearchInventoryApp {
     public static void main(String[] args) {
+        ArrayList<Product> inventory = getInventory();
+        for (Product item :inventory) {
+            System.out.printf("%d %s %.2f%n", item.getId(), item.getName(), item.getPrice());
 
+        }
     }
 
     public static ArrayList<Product> getInventory() {
