@@ -1,5 +1,8 @@
 package com.pluralsight;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class SearchInventoryApp {
@@ -9,6 +12,36 @@ public class SearchInventoryApp {
             System.out.printf("%d %s %.2f%n", item.getId(), item.getName(), item.getPrice());
 
         }
+        try {
+            BufferedReader bufReader = new BufferedReader(new FileReader("inventory.csv"));
+            String line = bufReader.readLine();
+            /*
+            for each line read from the file:
+            split the line into pieces wherever the | character appears
+                (store the pieces in a String array called tokens)
+
+            take piece 0 and convert it from text to a whole number -> id
+            take piece 1 and keep it as text                        -> name
+            take piece 2 and convert it from text to a decimal      -> price
+
+            create a new Product using id, name, price
+            add that Product to the inventory list
+             */
+            //String[] tokens = line.split("\\|");
+            while (line != null) {
+                String[] tokens = line.split("\\|");
+                int id = Integer.parseInt(tokens[0]);
+                String name = tokens[1];
+                double price = Double.parseDouble(tokens[2]);
+
+                System.out.println(line);
+                line.trim();
+                line = bufReader.readLine();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     public static ArrayList<Product> getInventory() {
