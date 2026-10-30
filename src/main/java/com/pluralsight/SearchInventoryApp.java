@@ -4,48 +4,89 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class SearchInventoryApp {
     public static void main(String[] args) {
+        // call method and load the products from the file into the inventory list
         ArrayList<Product> inventory = getInventory();
-        for (Product item :inventory) {
-            System.out.printf("%d %s %.2f%n", item.getId(), item.getName(), item.getPrice());
+        Scanner myscanner = new Scanner(System.in);
+
+
+        System.out.println("""
+        ======  Welcome to the Cozy Cafe ======
+        ======  What do you want to do? =======
+                1- List all products
+                2- Lookup a product by its id
+                3- Find all products within a 
+                price range
+                4- Add a new product
+                5- Quit the application
+        ========================================
+        Enter command:""");
+
+        int userInput = myscanner.nextInt();
+        // switch cases
+        switch (userInput) {
+            case 1:
+                // List all products
+                try {
+                    BufferedReader bufReader = new BufferedReader(new FileReader("inventory.csv"));
+                    String line = bufReader.readLine();
+                    //String[] tokens = line.split("\\|");
+                    while (line != null) {
+                        String[] tokens = line.split("\\|");
+                        int id = Integer.parseInt(tokens[0]);
+                        String name = tokens[1];
+                        double price = Double.parseDouble(tokens[2]);
+
+                        inventory.add(new Product(id, name, price));
+
+                        //System.out.println(line);
+                        //line.trim();
+                        line = bufReader.readLine();
+                    }
+                    for (Product item : inventory) {
+                        System.out.printf("%d %s %.2f%n", item.getId(), item.getName(), item.getPrice());
+                    }
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                break;
+            case 2:
+                // Lookup a product by its id
+                System.out.println("Please enter the item's id");
+                int itemId = myscanner.nextInt();
+                for (Product item : inventory) {
+                    if (item.getId() == itemId) {
+                        System.out.printf("%d %s %.2f%n", item.getId(), item.getName(), item.getPrice());
+                    }
+                }
+                break;
+            case 3:
+                // Find all products within a price range
+                System.out.println("Please enter lowest price range:");
+                double lowerPrice = myscanner.nextDouble();
+                System.out.println("Please enter higher price range:");
+                double higherPrice = myscanner.nextDouble();
+                for (Product item : inventory) {
+                    if (item.getPrice() <= higherPrice && item.getPrice() >= lowerPrice) {
+                        System.out.printf("%d %s %.2f%n", item.getId(), item.getName(), item.getPrice());
+                    }
+                }
+                break;
+            case 4:
+                // Add a new product
+                System.out.println("Please enter item id, name, and price:");
+                int addId = myscanner.nextInt();
+                String addName = myscanner.nextLine();
+                double addPrice = myscanner.nextDouble();
+            case 5:
+                // Quit the application
+                System.out.println("Application ended. Have a good day!");
 
         }
-        try {
-            BufferedReader bufReader = new BufferedReader(new FileReader("inventory.csv"));
-            String line = bufReader.readLine();
-            /*
-            for each line read from the file:
-            split the line into pieces wherever the | character appears
-                (store the pieces in a String array called tokens)
 
-            take piece 0 and convert it from text to a whole number -> id
-            take piece 1 and keep it as text                        -> name
-            take piece 2 and convert it from text to a decimal      -> price
-
-            create a new Product using id, name, price
-            add that Product to the inventory list
-             */
-            //String[] tokens = line.split("\\|");
-            while (line != null) {
-                String[] tokens = line.split("\\|");
-                int id = Integer.parseInt(tokens[0]);
-                String name = tokens[1];
-                double price = Double.parseDouble(tokens[2]);
-
-                inventory.add(new Product(id, name, price));
-
-                //System.out.println(line);
-                //line.trim();
-                line = bufReader.readLine();
-            }
-            for (Product item : inventory) {
-                System.out.printf("%d %s %.2f%n", item.getId(), item.getName(), item.getPrice());
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
 
     }
 
