@@ -34,9 +34,14 @@ public class SearchInventoryApp {
                 String name = tokens[1];
                 double price = Double.parseDouble(tokens[2]);
 
-                System.out.println(line);
-                line.trim();
+                inventory.add(new Product(id, name, price));
+
+                //System.out.println(line);
+                //line.trim();
                 line = bufReader.readLine();
+            }
+            for (Product item : inventory) {
+                System.out.printf("%d %s %.2f%n", item.getId(), item.getName(), item.getPrice());
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
